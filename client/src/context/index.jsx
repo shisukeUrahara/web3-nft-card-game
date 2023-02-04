@@ -17,6 +17,7 @@ export const GlobalContextProvider = ({ children }) => {
   //  interact with the smart contract
   const navigate = useNavigate();
   const [walletAddress, setWalletAddress] = useState("");
+  const [battleName, setBattleName] = useState("");
   const [provider, setProvider] = useState("");
   const [contract, setContract] = useState("");
   const [showAlert, setShowAlert] = useState({
@@ -91,6 +92,8 @@ export const GlobalContextProvider = ({ children }) => {
         walletAddress,
         showAlert,
         setShowAlert,
+        battleName,
+        setBattleName,
       }}
     >
       {children}
