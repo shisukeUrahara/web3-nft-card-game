@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { PageHOC, CustomInput, CustomButton } from "../components";
 import { useGlobalContext } from "../context";
 
 const Home = () => {
   const { contract, walletAddress, setShowAlert } = useGlobalContext();
   const [playerName, setPlayerName] = useState("");
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     console.log("**@ handleClick called , contract is , ", contract);
@@ -30,7 +32,6 @@ const Home = () => {
         });
       }
     } catch (error) {
-      // alert(error);
       console.log("**@ register error caught , error is , ", error?.message);
       setShowAlert({
         status: true,
@@ -39,6 +40,35 @@ const Home = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const checkForPlayerToken = async () => {
+      try {
+        const playerExists = await contract.isPlayer(walletAddress);
+        const playerTokenExists = await contract.isPlayerToken(walletAddress);
+
+        console.log("**@ playerExists 2 is , ", playerExists);
+        console.log("**@ playerTokenExists 2 is , ", playerTokenExists);
+        if (playerExists && playerTokenExists) {
+          navigate("/create-battle");
+        }
+      } catch (err) {
+        console.log(
+          "**@ contract useEffect error caught , error is , ",
+          error?.message
+        );
+        setShowAlert({
+          status: true,
+          type: "failure",
+          message: "Something went wrong",
+        });
+      }
+    };
+
+    if (contract) {
+      checkForPlayerToken();
+    }
+  }, [contract]);
 
   return (
     <div className="flex flex-col">
