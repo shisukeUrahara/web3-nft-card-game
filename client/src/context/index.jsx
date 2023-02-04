@@ -17,22 +17,32 @@ export const GlobalContextProvider = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState("");
   const [provider, setProvider] = useState("");
   const [contract, setContract] = useState("");
+  const [showAlert, setShowAlert] = useState({
+    status: false,
+    type: "info",
+    message: "",
+  });
 
   const updateWalletAddress = async () => {
-    const accounts = window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    console.log("**@ accounts are , ", accounts);
-
-    if (accounts) {
-      setWalletAddress(accounts[0]);
-    }
+    await window.ethereum
+      .request({
+        method: "eth_requestAccounts",
+      })
+      .then((accounts) => {
+        console.log("**@ accounts are , ", accounts);
+        if (accounts) {
+          setWalletAddress(accounts[0]);
+        }
+      })
+      .catch((err) => {
+        console.log("**@ wallet connection error , err is , ", err);
+      });
   };
 
   useEffect(() => {
     updateWalletAddress();
 
-    window.ethereum.on("accountsChanged", updateWalletAddress);
+    // window.ethereum.on("accountsChanged", updateWalletAddress);
   }, []);
 
   useEffect(() => {
@@ -40,7 +50,7 @@ export const GlobalContextProvider = ({ children }) => {
       const web3modal = new Web3Modal();
       const connection = await web3modal.connect();
       const newProvider = new ethers.providers.Web3Provider(connection);
-      const signer = newProvider.signer();
+      const signer = newProvider.getSigner();
       const newContract = new ethers.Contract(ADDRESS, ABI, signer);
 
       setProvider(provider);
@@ -50,11 +60,23 @@ export const GlobalContextProvider = ({ children }) => {
     setSmartContractAndProvider();
   }, []);
 
+  useEffect(() => {
+    if (showAlert?.status) {
+      const timer = setTimeout(() => {
+        setShowAlert({ status: false, type: "info", message: "" });
+      }, [5000]);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showAlert]);
+
   return (
     <GlobalContext.Provider
       value={{
         contract,
         walletAddress,
+        showAlert,
+        setShowAlert,
       }}
     >
       {children}
