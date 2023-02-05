@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import "@nomiclabs/hardhat-ethers";
 
 dotenv.config();
+const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 //* Notes for deploying the smart contract on your own subnet
 //* More info on subnets: https://docs.avax.network/subnets
@@ -28,6 +30,11 @@ export default {
       gasPrice: 225000000000,
       chainId: 43113,
       accounts: [process.env.PRIVATE_KEY],
+    },
+    goerli: {
+      url: GOERLI_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 5,
     },
     // subnet: {
     //   url: process.env.NODE_URL,

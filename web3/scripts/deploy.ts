@@ -15,9 +15,9 @@ async function main() {
 
   console.log(`Deploying a smart contract...`);
 
-  const AVAXGods = (await deploy("AVAXGods", _metadataUri)).connect(admin);
+  const NFTGods = (await deploy("NFTGods", _metadataUri)).connect(admin);
 
-  console.log({ AVAXGods: AVAXGods.address });
+  console.log({ NFTGods: NFTGods.address });
 }
 
 main()
