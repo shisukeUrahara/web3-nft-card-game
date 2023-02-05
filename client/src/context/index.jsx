@@ -34,6 +34,8 @@ export const GlobalContextProvider = ({ children }) => {
     pendingBattles: [],
     activeBattle: null,
   });
+  const [updateGameData, setUpdateGameData] = useState(0);
+  const [battleGround, setBattleGround] = useState("bg-astral");
 
   useEffect(() => {
     console.log(
@@ -66,6 +68,7 @@ export const GlobalContextProvider = ({ children }) => {
         walletAddress,
         contract,
         setShowAlert,
+        setUpdateGameData,
       });
     }
   }, [contract]);
@@ -129,7 +132,7 @@ export const GlobalContextProvider = ({ children }) => {
     if (contract) {
       fetchGameData();
     }
-  }, [contract]);
+  }, [contract, updateGameData]);
 
   return (
     <GlobalContext.Provider
@@ -142,6 +145,10 @@ export const GlobalContextProvider = ({ children }) => {
         setBattleName,
         gameData,
         setGameData,
+        updateGameData,
+        setUpdateGameData,
+        battleGround,
+        setBattleGround,
       }}
     >
       {children}
