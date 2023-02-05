@@ -46,7 +46,11 @@ export const GlobalContextProvider = ({ children }) => {
   }, [connectedAddress]);
 
   useEffect(() => {
+    console.log("**@ signer changed signer is , ", signer);
+    console.log("**@ signer changed provider is , ", provider);
+
     if (signer && provider) {
+      console.log("**@ here 1");
       const newContract = new ethers.Contract(ADDRESS, ABI, signer);
       console.log("**@ newContract is , ", newContract);
       setAppProvider(provider);
