@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { logo, heroImg } from "../assets";
 import styles from "../styles";
 import { useGlobalContext } from "../context";
@@ -19,6 +20,11 @@ const PageHOC = (Component, title, description) => () => {
           alt="logo"
           className={styles.hocLogo}
           onClick={() => navigate("/")}
+        />
+        <ConnectButton
+          accountStatus="address"
+          showBalance={false}
+          label="Connect wallet"
         />
 
         <div className={styles.hocBodyWrapper}>

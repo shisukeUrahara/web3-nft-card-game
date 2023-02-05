@@ -4,13 +4,24 @@ import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import { infuraProvider } from "wagmi/providers/infura";
+
 import { allChains, appChains } from "../utils/Chains/index";
 import { getRecommendedWallets, getOtherWallets } from "../utils/wallets/index";
+const env = import.meta.env;
+
 let supportedChains;
 
 const walletConfig = {
-  walletEnv: process.env.NEXT_PUBLIC_APP_ENVIRONMENT || "testnet",
+  walletEnv: env.VITE_ENVIRONMENT || "testnet",
 };
+
+console.log("**@ WALLETCONFIG , ENV IS , ", env);
+console.log("**@ WALLETCONFIG , PROCESS ENV  IS , ", env.VITE_ENVIRONMENT);
+console.log(
+  "**@ WALLETCONFIG , PROCESS ALCHECMY URL IS , ",
+  env.VITE_ALCHEMY_RPC_URL
+);
 
 if (
   walletConfig.walletEnv &&
@@ -22,8 +33,8 @@ if (
 }
 
 const { chains, provider } = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHECMY_RPC_URL || "" }),
-  publicProvider(),
+  alchemyProvider({ apiKey: env.VITE_ALCHEMY_RPC_URL }),
+  infuraProvider({ apiKey: env.VITE_INFURA_RPC_URL }),
 ]);
 
 const connectors = connectorsForWallets([
@@ -38,7 +49,7 @@ const connectors = connectorsForWallets([
 ]);
 
 const wagmiClient = createClient({
-  autoConnect: true,
+  autoConnect: false,
   connectors,
   provider,
 });

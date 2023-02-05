@@ -6,8 +6,9 @@ import { useGlobalContext } from "../context";
 
 const CreateBattle = () => {
   const navigate = useNavigate();
-  const { contract, battleName, setBattleName } = useGlobalContext();
+  const { contract, battleName, setBattleName, gameData } = useGlobalContext();
   const [waitBattle, setWaitBattle] = useState(false);
+  // console.log("**@ create battle gameData is , ", gameData);
 
   const handleClick = async () => {
     console.log("**@ create battle handle click called");
@@ -21,6 +22,12 @@ const CreateBattle = () => {
       console.log("**@ create  battle error caught , error is , ", err);
     }
   };
+
+  useEffect(() => {
+    if (gameData?.activeBattle?.battleStatus === 0) {
+      setWaitBattle(true);
+    }
+  }, [gameData]);
 
   return (
     <>

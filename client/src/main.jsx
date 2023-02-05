@@ -1,20 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Home, CreateBattle, JoinBattle, BattleGround } from "./page";
-import { GlobalContextProvider } from "./context";
+import App from "./App";
 import "./index.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import {
+  RainbowKitProvider,
+  connectorsForWallets,
+  darkTheme,
+} from "@rainbow-me/rainbowkit";
+import { WagmiConfig } from "wagmi";
+import { Config } from "./config/WalletConfig";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <GlobalContextProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/create-battle" element={<CreateBattle />} />
-        <Route path="/join-battle" element={<JoinBattle />} />
-        <Route path="/battleground" element={<BattleGround />} />
-      </Routes>
-    </GlobalContextProvider>
-  </BrowserRouter>
+  <WagmiConfig client={Config.client}>
+    <RainbowKitProvider
+      appInfo={Config.appInfo}
+      chains={Config.supportedChains}
+      modalSize="compact"
+    >
+      <App />
+    </RainbowKitProvider>
+  </WagmiConfig>
 );

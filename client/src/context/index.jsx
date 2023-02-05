@@ -8,6 +8,7 @@ import React, {
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { useNavigate } from "react-router-dom";
+import { useAccount, useProvider, useSigner } from "wagmi";
 import { ABI, ADDRESS } from "../contracts";
 import { createEventListener } from "./createEventListeners";
 
@@ -16,52 +17,42 @@ const GlobalContext = createContext();
 export const GlobalContextProvider = ({ children }) => {
   //  interact with the smart contract
   const navigate = useNavigate();
+  const { address: connectedAddress } = useAccount();
+  const provider = useProvider();
+  const { data: signer } = useSigner();
   const [walletAddress, setWalletAddress] = useState("");
   const [battleName, setBattleName] = useState("");
-  const [provider, setProvider] = useState("");
+  const [appProvider, setAppProvider] = useState("");
   const [contract, setContract] = useState("");
   const [showAlert, setShowAlert] = useState({
     status: false,
     type: "info",
     message: "",
   });
-
-  const updateWalletAddress = async () => {
-    await window.ethereum
-      .request({
-        method: "eth_requestAccounts",
-      })
-      .then((accounts) => {
-        console.log("**@ accounts are , ", accounts);
-        if (accounts) {
-          setWalletAddress(accounts[0]);
-        }
-      })
-      .catch((err) => {
-        console.log("**@ wallet connection error , err is , ", err);
-      });
-  };
+  const [gameData, setGameData] = useState({
+    players: [],
+    pendingBattles: [],
+    activeBattle: null,
+  });
 
   useEffect(() => {
-    updateWalletAddress();
-
-    window.ethereum.on("accountsChanged", updateWalletAddress);
-  }, []);
+    console.log(
+      "**@ connectedAddress changed , connectedAddress is , ",
+      connectedAddress
+    );
+    console.log("**@ connectedAddress changed , signer is , ", signer);
+    console.log("**@ connectedAddress changed , provider is , ", provider);
+    setWalletAddress(connectedAddress);
+  }, [connectedAddress]);
 
   useEffect(() => {
-    const setSmartContractAndProvider = async () => {
-      const web3modal = new Web3Modal();
-      const connection = await web3modal.connect();
-      const newProvider = new ethers.providers.Web3Provider(connection);
-      const signer = newProvider.getSigner();
+    if (signer && provider) {
       const newContract = new ethers.Contract(ADDRESS, ABI, signer);
-
-      setProvider(provider);
+      console.log("**@ newContract is , ", newContract);
+      setAppProvider(provider);
       setContract(newContract);
-    };
-
-    setSmartContractAndProvider();
-  }, []);
+    }
+  }, [signer, provider]);
 
   useEffect(() => {
     if (contract) {
@@ -85,6 +76,57 @@ export const GlobalContextProvider = ({ children }) => {
     }
   }, [showAlert]);
 
+  //  set game data to the state
+  useEffect(() => {
+    const fetchGameData = async () => {
+      const battles = await contract.getAllBattles();
+      const pendingBattles = battles.filter(
+        (battle) => battle.battleStatus === 0
+      );
+      console.log("**@ fetched battles are , ", battles);
+      console.log("**@ pendingBattles are , ", pendingBattles);
+
+      //  find battle taht current player has created
+      let activeBattle = null;
+      battles.forEach((battle) => {
+        //  check if current player is part of the battle
+        console.log("**@ mapping all battles , current battle is , ", battle);
+        console.log(
+          "**@ mapping all battles , walletAddress is , ",
+          walletAddress
+        );
+
+        let battleWithCurrentPlayer = battle.players.find(
+          (player) => player.toLowerCase() === walletAddress.toLowerCase()
+        );
+
+        console.log(
+          "**@ battleWithCurrentPlayer is , ",
+          battleWithCurrentPlayer
+        );
+
+        if (battleWithCurrentPlayer) {
+          console.log(
+            "**@ got current battle for player , battle is , ",
+            battle
+          );
+          //  check if current battle doesnot have a winner yet , i.e current battle is still active
+          if (battle.winner.startsWith("0x00")) {
+            activeBattle = battle;
+          }
+        }
+      });
+
+      console.log("**@ active battle is , ", activeBattle);
+
+      setGameData({ pendingBattles: pendingBattles.slice(1), activeBattle });
+    };
+
+    if (contract) {
+      fetchGameData();
+    }
+  }, [contract]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -94,6 +136,8 @@ export const GlobalContextProvider = ({ children }) => {
         setShowAlert,
         battleName,
         setBattleName,
+        gameData,
+        setGameData,
       }}
     >
       {children}

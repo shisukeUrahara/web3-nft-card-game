@@ -12,7 +12,7 @@ export const FujiChain = {
     symbol: "AVAX",
   },
   rpcUrls: {
-    default: "https://api.avax-test.network/ext/bc/C/rpc",
+    default: "https://avalanche-fuji.infura.io/v3/",
   },
   blockExplorers: {
     default: { name: "SnowTrace", url: "https://testnet.snowtrace.io/" },

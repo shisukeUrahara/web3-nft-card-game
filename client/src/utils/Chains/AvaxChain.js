@@ -12,7 +12,7 @@ export const AvaxChain = {
     symbol: "AVAX",
   },
   rpcUrls: {
-    default: "https://api.avax.network/ext/bc/C/rpc",
+    default: "https://avalanche-mainnet.infura.io/v3/",
   },
   blockExplorers: {
     default: { name: "SnowTrace", url: "https://snowtrace.io/" },

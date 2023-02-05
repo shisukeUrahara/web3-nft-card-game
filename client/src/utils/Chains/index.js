@@ -1,9 +1,8 @@
-import { AvaxChain } from "./AvaxChain";
-import { FujiChain } from "./FujiChain";
+import { chain } from "wagmi";
 
-export const allChains = [AvaxChain, FujiChain];
-export const testnetChains = [FujiChain];
-export const mainnetChains = [AvaxChain];
+export const allChains = [chain.goerli, chain.mainnet];
+export const testnetChains = [chain.goerli];
+export const mainnetChains = [chain.mainnet];
 
 export const appChains = {
   allChains,
