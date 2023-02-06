@@ -38,6 +38,17 @@ export const GlobalContextProvider = ({ children }) => {
   const [battleGround, setBattleGround] = useState("bg-astral");
 
   useEffect(() => {
+    const battleGroundFromStorage = localStorage.getItem("battleGround");
+
+    if (battleGroundFromStorage) {
+      setBattleGround(battleGroundFromStorage);
+    } else {
+      localStorage.setItem("battleGround", battleGround);
+      // setBattleGround(battleGround);
+    }
+  }, []);
+
+  useEffect(() => {
     console.log(
       "**@ connectedAddress changed , connectedAddress is , ",
       connectedAddress
