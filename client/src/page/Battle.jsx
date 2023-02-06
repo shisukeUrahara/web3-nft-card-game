@@ -20,6 +20,7 @@ const Battle = () => {
     showAlert,
     setShowAlert,
     battleGround,
+    setErrorMessage,
   } = useGlobalContext();
   const [player1, setPlayer1] = useState({});
   const [player2, setPlayer2] = useState({});
@@ -83,13 +84,31 @@ const Battle = () => {
           health: p2Health,
           mana: p2Mana,
         });
-      } catch (err) {}
+      } catch (err) {
+        setErrorMessage(err);
+      }
     };
 
     if (contract && gameData?.activeBattle) {
       fetchPlayerInfo();
     }
   }, [contract, gameData, battleName]);
+
+  const makeAMove = async (choice) => {
+    playAudio(choice === 1 ? attackSound : defenseSound);
+    try {
+      await contract.attackOrDefendChoice(choice, battleName);
+
+      setShowAlert({
+        status: true,
+        type: "info",
+        message: `Initiating ${choice === 1 ? "attack" : "defense"}`,
+      });
+    } catch (err) {
+      console.log("**@ make move error caught , error is , ", err);
+      setErrorMessage(err);
+    }
+  };
 
   return (
     <div
@@ -106,8 +125,8 @@ const Battle = () => {
         <div className="flex items-center flex-row">
           <ActionButton
             imgUrl={attack}
-            handleClick={() => {}}
             restStyles="mr-2 hover:border-yellow-400"
+            handleClick={() => makeAMove(1)}
           />
 
           <Card
@@ -119,8 +138,8 @@ const Battle = () => {
 
           <ActionButton
             imgUrl={defense}
-            handleClick={() => {}}
             restStyles="ml-2 hover:border-red-600"
+            handleClick={() => makeAMove(2)}
           />
         </div>
       </div>

@@ -47,4 +47,10 @@ export const createEventListener = ({
 
     setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
   });
+
+  //  adding a filter for making a move
+  const BattleMoveEventFilter = contract.filters.BattleMove();
+  AddNewEvent(BattleMoveEventFilter, provider, ({ args }) => {
+    console.log("**@ New battle move made  , args are , ", args);
+  });
 };

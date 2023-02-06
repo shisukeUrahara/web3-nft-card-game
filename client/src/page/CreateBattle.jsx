@@ -6,7 +6,8 @@ import { useGlobalContext } from "../context";
 
 const CreateBattle = () => {
   const navigate = useNavigate();
-  const { contract, battleName, setBattleName, gameData } = useGlobalContext();
+  const { contract, battleName, setBattleName, gameData, setErrorMessage } =
+    useGlobalContext();
   const [waitBattle, setWaitBattle] = useState(false);
   // console.log("**@ create battle gameData is , ", gameData);
 
@@ -20,6 +21,7 @@ const CreateBattle = () => {
       setWaitBattle(true);
     } catch (err) {
       console.log("**@ create  battle error caught , error is , ", err);
+      setErrorMessage(err);
     }
   };
 

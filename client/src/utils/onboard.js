@@ -103,26 +103,3 @@ export const GetParams = async () => {
 
   return response;
 };
-
-// export async function SwitchNetwork() {
-//   await window?.ethereum
-//     ?.request({
-//       method: "wallet_addEthereumChain",
-//       params: [
-//         {
-//           chainId: "0x05",
-//           chainName: "Goerli",
-//           nativeCurrency: {
-//             name: "GoerliETH",
-//             symbol: "GoerliETH",
-//             decimals: 18,
-//           },
-//           rpcUrls: ["https://goerli.infura.io/v3/"],
-//           blockExplorerUrls: ["https://goerli.etherscan.io/"],
-//         },
-//       ],
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// }

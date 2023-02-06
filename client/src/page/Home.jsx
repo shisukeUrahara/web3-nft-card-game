@@ -4,7 +4,8 @@ import { PageHOC, CustomInput, CustomButton } from "../components";
 import { useGlobalContext } from "../context";
 
 const Home = () => {
-  const { contract, walletAddress, setShowAlert } = useGlobalContext();
+  const { contract, walletAddress, setShowAlert, setErrorMessage } =
+    useGlobalContext();
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
 
@@ -31,13 +32,14 @@ const Home = () => {
           message: `Player already exists for ${walletAddress}`,
         });
       }
-    } catch (error) {
-      console.log("**@ register error caught , error is , ", error?.message);
-      setShowAlert({
-        status: true,
-        type: "failure",
-        message: "Something went wrong",
-      });
+    } catch (err) {
+      console.log("**@ register error caught , error is , ", err);
+      setErrorMessage(err);
+      // setShowAlert({
+      //   status: true,
+      //   type: "failure",
+      //   message: "Something went wrong",
+      // });
     }
   };
 
@@ -57,11 +59,13 @@ const Home = () => {
           "**@ contract useEffect error caught , error is , ",
           err?.message
         );
-        setShowAlert({
-          status: true,
-          type: "failure",
-          message: "Something went wrong",
-        });
+        setErrorMessage(err);
+
+        // setShowAlert({
+        //   status: true,
+        //   type: "failure",
+        //   message: "Something went wrong",
+        // });
       }
     };
 

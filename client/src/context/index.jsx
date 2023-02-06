@@ -24,6 +24,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [battleName, setBattleName] = useState("");
   const [appProvider, setAppProvider] = useState("");
   const [contract, setContract] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [showAlert, setShowAlert] = useState({
     status: false,
     type: "info",
@@ -59,9 +60,6 @@ export const GlobalContextProvider = ({ children }) => {
   }, [connectedAddress]);
 
   useEffect(() => {
-    // console.log("**@ signer changed signer is , ", signer);
-    // console.log("**@ signer changed provider is , ", provider);
-
     if (signer && provider) {
       // console.log("**@ here 1");
       const newContract = new ethers.Contract(ADDRESS, ABI, signer);
@@ -145,6 +143,23 @@ export const GlobalContextProvider = ({ children }) => {
     }
   }, [contract, updateGameData]);
 
+  // useEffect to handle showing error messages
+  useEffect(() => {
+    if (errorMessage) {
+      const parsedErrorMessage = errorMessage?.reason
+        ?.slice("execution reverted: ".length)
+        .slice(0, -1);
+
+      if (parsedErrorMessage) {
+        setShowAlert({
+          status: true,
+          type: "failure",
+          message: parsedErrorMessage,
+        });
+      }
+    }
+  }, [errorMessage]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -160,6 +175,8 @@ export const GlobalContextProvider = ({ children }) => {
         setUpdateGameData,
         battleGround,
         setBattleGround,
+        errorMessage,
+        setErrorMessage,
       }}
     >
       {children}

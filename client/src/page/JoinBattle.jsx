@@ -5,8 +5,14 @@ import { useGlobalContext } from "../context";
 import { CustomButton, PageHOC } from "../components";
 
 const JoinBattle = () => {
-  const { contract, walletAddress, gameData, setShowAlert, setBattleName } =
-    useGlobalContext();
+  const {
+    contract,
+    walletAddress,
+    gameData,
+    setShowAlert,
+    setBattleName,
+    setErrorMessage,
+  } = useGlobalContext();
   const navigate = useNavigate();
 
   const handleJoinBattle = async (battleName) => {
@@ -22,6 +28,7 @@ const JoinBattle = () => {
       });
     } catch (err) {
       console.log("**@ join battle error caught , error is , ", err);
+      setErrorMessage(err);
     }
   };
 
