@@ -55,7 +55,7 @@ const Home = () => {
       } catch (err) {
         console.log(
           "**@ contract useEffect error caught , error is , ",
-          error?.message
+          err?.message
         );
         setShowAlert({
           status: true,

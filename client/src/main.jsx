@@ -18,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       appInfo={Config.appInfo}
       chains={Config.supportedChains}
       modalSize="compact"
+      theme={Config.theme}
     >
       <App />
     </RainbowKitProvider>

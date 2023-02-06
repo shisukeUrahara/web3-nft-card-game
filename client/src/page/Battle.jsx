@@ -98,7 +98,6 @@ const Battle = () => {
       {showAlert?.status && (
         <Alert type={showAlert.type} message={showAlert.message} />
       )}
-      <h1 className={`text-xl `}>{battleName}</h1>
       <PlayerInfo player={player2} playerIcon={player02Icon} mt />
 
       <div className={`${styles.flexCenter} flex-col my-10`}>

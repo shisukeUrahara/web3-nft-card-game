@@ -53,19 +53,19 @@ export const GlobalContextProvider = ({ children }) => {
       "**@ connectedAddress changed , connectedAddress is , ",
       connectedAddress
     );
-    console.log("**@ connectedAddress changed , signer is , ", signer);
-    console.log("**@ connectedAddress changed , provider is , ", provider);
+    // console.log("**@ connectedAddress changed , signer is , ", signer);
+    // console.log("**@ connectedAddress changed , provider is , ", provider);
     setWalletAddress(connectedAddress);
   }, [connectedAddress]);
 
   useEffect(() => {
-    console.log("**@ signer changed signer is , ", signer);
-    console.log("**@ signer changed provider is , ", provider);
+    // console.log("**@ signer changed signer is , ", signer);
+    // console.log("**@ signer changed provider is , ", provider);
 
     if (signer && provider) {
-      console.log("**@ here 1");
+      // console.log("**@ here 1");
       const newContract = new ethers.Contract(ADDRESS, ABI, signer);
-      console.log("**@ newContract is , ", newContract);
+      // console.log("**@ newContract is , ", newContract);
       setAppProvider(provider);
       setContract(newContract);
     }
@@ -108,26 +108,26 @@ export const GlobalContextProvider = ({ children }) => {
       let activeBattle = null;
       battles.forEach((battle) => {
         //  check if current player is part of the battle
-        console.log("**@ mapping all battles , current battle is , ", battle);
-        console.log(
-          "**@ mapping all battles , walletAddress is , ",
-          walletAddress
-        );
+        // console.log("**@ mapping all battles , current battle is , ", battle);
+        // console.log(
+        //   "**@ mapping all battles , walletAddress is , ",
+        //   walletAddress
+        // );
 
         let battleWithCurrentPlayer = battle.players.find(
           (player) => player.toLowerCase() === walletAddress.toLowerCase()
         );
 
-        console.log(
-          "**@ battleWithCurrentPlayer is , ",
-          battleWithCurrentPlayer
-        );
+        // console.log(
+        //   "**@ battleWithCurrentPlayer is , ",
+        //   battleWithCurrentPlayer
+        // );
 
         if (battleWithCurrentPlayer) {
-          console.log(
-            "**@ got current battle for player , battle is , ",
-            battle
-          );
+          // console.log(
+          //   "**@ got current battle for player , battle is , ",
+          //   battle
+          // );
           //  check if current battle doesnot have a winner yet , i.e current battle is still active
           if (battle.winner.startsWith("0x00")) {
             activeBattle = battle;

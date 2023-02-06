@@ -1,5 +1,5 @@
 import "@rainbow-me/rainbowkit/styles.css";
-import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets, darkTheme } from "@rainbow-me/rainbowkit";
 
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -62,4 +62,5 @@ export const Config = {
   client: wagmiClient,
   appInfo: appInfo,
   supportedChains: chains,
+  theme: darkTheme(),
 };

@@ -1,16 +1,92 @@
-import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
+import { useState, useEffect } from "react";
+import Modal from "react-modal";
+import { useNetwork, useSwitchNetwork, useBalance, useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-import styles from '../styles';
-import { CustomButton } from '.';
-import { useGlobalContext } from '../context';
-import { GetParams, SwitchNetwork } from '../utils/onboard.js';
+import styles from "../styles";
+import CustomButton from "./CustomButton";
+import { useGlobalContext } from "../context";
+// import { GetParams, SwitchNetwork } from "../utils/onboard.js";
 
 const OnboardModal = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const { updateCurrentWalletAddress } = useGlobalContext();
+  const [isMounted, setIsMounted] = useState(false);
+  const { updateCurrentWalletAddress, walletAddress } = useGlobalContext();
   const [step, setStep] = useState(-1);
+  const { chain: selectedChain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+  const {
+    address: connectedAddress,
+    isConnecting,
+    isDisconnected,
+  } = useAccount();
 
+  const { data: userBalance, isError: isBalanceError } = useBalance({
+    address: connectedAddress,
+  });
+
+  function isEthereum() {
+    if (window.ethereum) return true;
+
+    return false;
+  }
+
+  const GetParams = async () => {
+    const response = {
+      isError: false,
+      message: "",
+      step: -1,
+      balance: 0,
+      account: "0x0",
+    };
+
+    if (!isEthereum()) {
+      response.step = 0;
+
+      return response;
+    }
+    console.log("**@ onBoardModal , walletAddress 2 is , ", connectedAddress);
+
+    if (!connectedAddress) {
+      response.step = 1;
+
+      return response;
+    }
+
+    response.account = walletAddress;
+
+    if (selectedChain?.id !== 5) {
+      response.step = 2;
+
+      return response;
+    }
+
+    // const { currentBalance, err } = await requestBalance(currentAccount);
+    console.log("**@ network is ok , userBalance is ", userBalance);
+    console.log(
+      "**@ network is ok , userBalance formatted is ",
+      userBalance?.formatted
+    );
+
+    if (isBalanceError) {
+      response.isError = true;
+      response.message = "Error fetching balance!";
+
+      return response;
+    }
+
+    response.balance = userBalance?.formatted;
+    console.log("**@ user balance is , ", userBalance);
+    console.log("**@ user Balance formatted is , ", userBalance?.formatted);
+
+    if (userBalance?.formatted < 0.2) {
+      response.step = 3;
+
+      return response;
+    }
+
+    return response;
+  };
   async function resetParams() {
     const currentStep = await GetParams();
     setStep(currentStep.step);
@@ -19,27 +95,32 @@ const OnboardModal = () => {
 
   useEffect(() => {
     resetParams();
+  }, [connectedAddress, selectedChain]);
 
-    window?.ethereum?.on('chainChanged', () => {
-      resetParams();
-    });
-
-    window?.ethereum?.on('accountsChanged', () => {
-      resetParams();
-    });
+  useEffect(() => {
+    setIsMounted(true);
   }, []);
+
+  const handleSwitchNetwork = async () => {
+    console.log(
+      "**@ handleSwitch network called , switchNetwork is , ",
+      switchNetwork
+    );
+
+    await switchNetwork?.(5);
+  };
 
   const generateStep = (st) => {
     switch (st) {
       case 0:
         return (
           <>
-            <p className={styles.modalText}>
-              You don't have Core Wallet installed!
-            </p>
+            <p className={styles.modalText}>You don't have Wallet installed!</p>
             <CustomButton
-              title="Download Core"
-              handleClick={() => window.open('https://core.app/', '_blank')}
+              title="Download Metamask"
+              onClickHandler={() =>
+                window.open("https://metamask.io/", "_blank")
+              }
             />
           </>
         );
@@ -48,12 +129,17 @@ const OnboardModal = () => {
         return (
           <>
             <p className={styles.modalText}>
-              You haven't connected your account to Core Wallet!
+              You haven't connected your account to Wallet!
             </p>
-            <CustomButton
+            <ConnectButton
+              accountStatus="address"
+              showBalance={false}
+              label="Connect wallet"
+            />
+            {/* <CustomButton
               title="Connect Account"
               handleClick={updateCurrentWalletAddress}
-            />
+            /> */}
           </>
         );
 
@@ -61,9 +147,12 @@ const OnboardModal = () => {
         return (
           <>
             <p className={styles.modalText}>
-              You're on a different network. Switch to Fuji C-Chain.
+              You're on a different network. Switch to Goerli testnet.
             </p>
-            <CustomButton title="Switch" handleClick={SwitchNetwork} />
+            <CustomButton
+              title="Switch"
+              handleClick={() => handleSwitchNetwork()}
+            />
           </>
         );
 
@@ -71,11 +160,13 @@ const OnboardModal = () => {
         return (
           <>
             <p className={styles.modalText}>
-              Oops, you don't have AVAX tokens in your account
+              Oops, you don't have Goerli ETH in your account
             </p>
             <CustomButton
               title="Grab some test tokens"
-              handleClick={() => window.open('https://faucet.avax.network/', '_blank')}
+              handleClick={() =>
+                window.open("https://goerlifaucet.com/", "_blank")
+              }
             />
           </>
         );
@@ -86,13 +177,17 @@ const OnboardModal = () => {
   };
 
   return (
-    <Modal
-      isOpen={modalIsOpen}
-      className={`absolute inset-0 ${styles.flexCenter} flex-col ${styles.glassEffect}`}
-      overlayClassName="Overlay"
-    >
-      {generateStep(step)}
-    </Modal>
+    <>
+      {isMounted && (
+        <Modal
+          isOpen={modalIsOpen}
+          className={`absolute inset-0 ${styles.flexCenter} flex-col ${styles.glassEffect}`}
+          overlayClassName="Overlay"
+        >
+          {generateStep(step)}
+        </Modal>
+      )}
+    </>
   );
 };
 
