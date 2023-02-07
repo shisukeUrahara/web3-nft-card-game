@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { useNetwork, useSwitchNetwork, useBalance, useAccount } from "wagmi";
+import {
+  useNetwork,
+  useSwitchNetwork,
+  useBalance,
+  useAccount,
+  useConnect,
+} from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import styles from "../styles";
@@ -15,15 +21,12 @@ const OnboardModal = () => {
   const [step, setStep] = useState(-1);
   const { chain: selectedChain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
-  const {
-    address: connectedAddress,
-    isConnecting,
-    isDisconnected,
-  } = useAccount();
+  const { address: connectedAddress } = useAccount();
 
   const { data: userBalance, isError: isBalanceError } = useBalance({
     address: connectedAddress,
   });
+  const { connect } = useConnect();
 
   function isEthereum() {
     if (window.ethereum) return true;
@@ -131,15 +134,13 @@ const OnboardModal = () => {
             <p className={styles.modalText}>
               You haven't connected your account to Wallet!
             </p>
-            <ConnectButton
-              accountStatus="address"
-              showBalance={false}
-              label="Connect wallet"
-            />
-            {/* <CustomButton
-              title="Connect Account"
-              handleClick={updateCurrentWalletAddress}
-            /> */}
+            <div className={`${styles.btn}`}>
+              <ConnectButton
+                accountStatus="address"
+                showBalance={false}
+                label="Connect wallet"
+              />
+            </div>
           </>
         );
 
@@ -151,7 +152,7 @@ const OnboardModal = () => {
             </p>
             <CustomButton
               title="Switch"
-              handleClick={() => handleSwitchNetwork()}
+              onClickHandler={() => handleSwitchNetwork()}
             />
           </>
         );
@@ -164,7 +165,7 @@ const OnboardModal = () => {
             </p>
             <CustomButton
               title="Grab some test tokens"
-              handleClick={() =>
+              onClickHandler={() =>
                 window.open("https://goerlifaucet.com/", "_blank")
               }
             />
