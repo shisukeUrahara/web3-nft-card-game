@@ -87,4 +87,27 @@ export const createEventListener = ({
 
     setUpdateGameData((prevUpdateGameData) => prevUpdateGameData + 1);
   });
+
+  //  adding a filter for battle ended event
+  const BattleEndedEventFilter = contract.filters.BattleEnded();
+  AddNewEvent(BattleEndedEventFilter, provider, ({ args }) => {
+    console.log("**@ battle ended   , args are , ", args);
+    console.log("**@ battle ended   , walletAddress is , ", walletAddress);
+
+    if (walletAddress.toLowerCase() === args.winner.toLowerCase()) {
+      setShowAlert({
+        status: true,
+        type: "info",
+        message: "You Won!",
+      });
+    } else if (walletAddress.toLowerCase() === args.loser.toLowerCase()) {
+      setShowAlert({
+        status: true,
+        type: "failure",
+        message: "You Lost!",
+      });
+    }
+
+    navigate("/create-battle");
+  });
 };
