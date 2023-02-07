@@ -48,7 +48,6 @@ const OnboardModal = () => {
 
       return response;
     }
-    console.log("**@ onBoardModal , walletAddress 2 is , ", connectedAddress);
 
     if (!connectedAddress) {
       response.step = 1;
@@ -64,13 +63,6 @@ const OnboardModal = () => {
       return response;
     }
 
-    // const { currentBalance, err } = await requestBalance(currentAccount);
-    console.log("**@ network is ok , userBalance is ", userBalance);
-    console.log(
-      "**@ network is ok , userBalance formatted is ",
-      userBalance?.formatted
-    );
-
     if (isBalanceError) {
       response.isError = true;
       response.message = "Error fetching balance!";
@@ -79,8 +71,6 @@ const OnboardModal = () => {
     }
 
     response.balance = userBalance?.formatted;
-    console.log("**@ user balance is , ", userBalance);
-    console.log("**@ user Balance formatted is , ", userBalance?.formatted);
 
     if (userBalance?.formatted < 0.2) {
       response.step = 3;
@@ -105,11 +95,6 @@ const OnboardModal = () => {
   }, []);
 
   const handleSwitchNetwork = async () => {
-    console.log(
-      "**@ handleSwitch network called , switchNetwork is , ",
-      switchNetwork
-    );
-
     await switchNetwork?.(5);
   };
 

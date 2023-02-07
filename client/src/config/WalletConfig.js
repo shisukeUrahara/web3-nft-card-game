@@ -16,13 +16,6 @@ const walletConfig = {
   walletEnv: env.VITE_ENVIRONMENT || "testnet",
 };
 
-console.log("**@ WALLETCONFIG , ENV IS , ", env);
-console.log("**@ WALLETCONFIG , PROCESS ENV  IS , ", env.VITE_ENVIRONMENT);
-console.log(
-  "**@ WALLETCONFIG , PROCESS ALCHECMY URL IS , ",
-  env.VITE_ALCHEMY_RPC_URL
-);
-
 if (
   walletConfig.walletEnv &&
   walletConfig.walletEnv.toLowerCase() == "mainnet"

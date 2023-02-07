@@ -17,7 +17,6 @@ const marginIndexing = (index) => {
 };
 
 const PlayerInfo = ({ player, playerIcon, mt }) => {
-  console.log("**@ playerInfo called with player , ", player);
   return (
     <div className={`${styles.flexCenter} ${mt ? "mt-4" : "mb-4"}`}>
       <img

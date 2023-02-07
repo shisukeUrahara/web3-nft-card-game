@@ -10,12 +10,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleClick = async () => {
-    console.log("**@ handleClick called , contract is , ", contract);
-    console.log("**@ handleClick called, walletAddress is , ", walletAddress);
-
     try {
       const playerExists = await contract.isPlayer(walletAddress);
-      console.log("**@ playerExists is , ", playerExists);
 
       if (!playerExists) {
         await contract.registerPlayer(playerName, playerName, {
@@ -35,7 +31,6 @@ const Home = () => {
         });
       }
     } catch (err) {
-      console.log("**@ register error caught , error is , ", err);
       setErrorMessage(err);
     }
   };
@@ -46,16 +41,10 @@ const Home = () => {
         const playerExists = await contract.isPlayer(walletAddress);
         const playerTokenExists = await contract.isPlayerToken(walletAddress);
 
-        console.log("**@ playerExists 2 is , ", playerExists);
-        console.log("**@ playerTokenExists 2 is , ", playerTokenExists);
         if (playerExists && playerTokenExists) {
           navigate("/create-battle");
         }
       } catch (err) {
-        console.log(
-          "**@ contract useEffect error caught , error is , ",
-          err?.message
-        );
         setErrorMessage(err);
       }
     };

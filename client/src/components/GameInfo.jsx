@@ -11,7 +11,6 @@ const GameInfo = () => {
   const navigate = useNavigate();
 
   const handleBattleExit = async () => {
-    console.log("**@ handleBattleExit called , ");
     const battleName = gameData.activeBattle.name;
 
     try {

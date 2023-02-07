@@ -52,20 +52,12 @@ export const GlobalContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    console.log(
-      "**@ connectedAddress changed , connectedAddress is , ",
-      connectedAddress
-    );
-    // console.log("**@ connectedAddress changed , signer is , ", signer);
-    // console.log("**@ connectedAddress changed , provider is , ", provider);
     setWalletAddress(connectedAddress);
   }, [connectedAddress]);
 
   useEffect(() => {
     if (signer && provider) {
-      // console.log("**@ here 1");
       const newContract = new ethers.Contract(ADDRESS, ABI, signer);
-      // console.log("**@ newContract is , ", newContract);
       setAppProvider(provider);
       setContract(newContract);
     }
@@ -103,41 +95,23 @@ export const GlobalContextProvider = ({ children }) => {
       const pendingBattles = battles.filter(
         (battle) => battle.battleStatus === 0
       );
-      console.log("**@ fetched battles are , ", battles);
-      console.log("**@ pendingBattles are , ", pendingBattles);
 
       //  find battle taht current player has created
       let activeBattle = null;
       battles.forEach((battle) => {
         //  check if current player is part of the battle
-        // console.log("**@ mapping all battles , current battle is , ", battle);
-        // console.log(
-        //   "**@ mapping all battles , walletAddress is , ",
-        //   walletAddress
-        // );
 
         let battleWithCurrentPlayer = battle.players.find(
           (player) => player.toLowerCase() === walletAddress.toLowerCase()
         );
 
-        // console.log(
-        //   "**@ battleWithCurrentPlayer is , ",
-        //   battleWithCurrentPlayer
-        // );
-
         if (battleWithCurrentPlayer) {
-          // console.log(
-          //   "**@ got current battle for player , battle is , ",
-          //   battle
-          // );
           //  check if current battle doesnot have a winner yet , i.e current battle is still active
           if (battle.winner.startsWith("0x00")) {
             activeBattle = battle;
           }
         }
       });
-
-      console.log("**@ active battle is , ", activeBattle);
 
       setGameData({ pendingBattles: pendingBattles.slice(1), activeBattle });
     };

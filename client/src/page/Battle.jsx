@@ -46,17 +46,9 @@ const Battle = () => {
           player02Address = gameData.activeBattle.players[0];
         }
 
-        console.log("**@ in Battle , calculating stats ");
-        console.log("**@ player01Address is , ", player01Address);
-        console.log("**@ player02Address is , ", player02Address);
-
         const p1TokenData = await contract.getPlayerToken(player01Address);
         const player01 = await contract.getPlayer(player01Address);
         const player02 = await contract.getPlayer(player02Address);
-
-        console.log("**@ p1TokenData is , ", p1TokenData);
-        console.log("**@ player01 is , ", player01);
-        console.log("**@ player02 is , ", player02);
 
         const p1Attack = p1TokenData.attackStrength.toNumber();
         const p1Defense = p1TokenData.defenseStrength.toNumber();
@@ -64,13 +56,6 @@ const Battle = () => {
         const p1Mana = player01.playerMana.toNumber();
         const p2Health = player02.playerHealth.toNumber();
         const p2Mana = player02.playerMana.toNumber();
-
-        console.log("**@ p1Attack is , ", p1Attack);
-        console.log("**@ p1Defense is , ", p1Defense);
-        console.log("**@ p1Health is , ", p1Health);
-        console.log("**@ p1Mana is , ", p1Mana);
-        console.log("**@ p2Health is , ", p2Health);
-        console.log("**@ p2Mana is , ", p2Mana);
 
         setPlayer1({
           ...player01,
@@ -120,7 +105,6 @@ const Battle = () => {
         message: `Initiating ${choice === 1 ? "attack" : "defense"}`,
       });
     } catch (err) {
-      console.log("**@ make move error caught , error is , ", err);
       setErrorMessage(err);
     }
   };

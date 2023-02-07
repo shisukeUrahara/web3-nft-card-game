@@ -9,10 +9,8 @@ const CreateBattle = () => {
   const { contract, battleName, setBattleName, gameData, setErrorMessage } =
     useGlobalContext();
   const [waitBattle, setWaitBattle] = useState(false);
-  // console.log("**@ create battle gameData is , ", gameData);
 
   const handleClick = async () => {
-    console.log("**@ create battle handle click called");
     if (!battleName || !battleName.trim()) {
       return null;
     }
@@ -22,7 +20,6 @@ const CreateBattle = () => {
       });
       setWaitBattle(true);
     } catch (err) {
-      console.log("**@ create  battle error caught , error is , ", err);
       setErrorMessage(err);
     }
   };

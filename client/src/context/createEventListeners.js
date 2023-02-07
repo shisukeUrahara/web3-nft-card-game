@@ -34,8 +34,6 @@ export const createEventListener = ({
 }) => {
   const NewPlayerEventFilter = contract.filters.NewPlayer();
   AddNewEvent(NewPlayerEventFilter, provider, ({ args }) => {
-    console.log("**@ New Player created , args are , ", args);
-
     if (walletAddress == args.owner) {
       setShowAlert({
         status: true,
@@ -47,8 +45,6 @@ export const createEventListener = ({
 
   const NewGameTokenEventFilter = contract.filters.NewGameToken();
   AddNewEvent(NewGameTokenEventFilter, provider, ({ args }) => {
-    console.log("**@ New game token created!", args.owner);
-
     if (walletAddress.toLowerCase() === args.owner.toLowerCase()) {
       setShowAlert({
         status: true,
@@ -63,9 +59,6 @@ export const createEventListener = ({
   //  adding a filter to join battle
   const NewBattleEventFilter = contract.filters.NewBattle();
   AddNewEvent(NewBattleEventFilter, provider, ({ args }) => {
-    console.log("**@ New battle joined , args are , ", args);
-    console.log("**@ New battle joined , walletAddress is , ", walletAddress);
-
     if (
       args.player1.toLowerCase() === walletAddress.toLowerCase() ||
       args.player2.toLowerCase() === walletAddress.toLowerCase()
@@ -85,9 +78,6 @@ export const createEventListener = ({
   //  adding a filter to resolve battle moves and show exploding animation for players who were damaged
   const RoundEndedEventFilter = contract.filters.RoundEnded();
   AddNewEvent(RoundEndedEventFilter, provider, ({ args }) => {
-    console.log("**@ round ended   , args are , ", args);
-    console.log("**@ round ended   , walletAddress is , ", walletAddress);
-
     for (let i = 0; i < args.damagedPlayers.length; i++) {
       if (args.damagedPlayers[i] !== zeroAccount) {
         if (args.damagedPlayers[i] === walletAddress) {
@@ -106,9 +96,6 @@ export const createEventListener = ({
   //  adding a filter for battle ended event
   const BattleEndedEventFilter = contract.filters.BattleEnded();
   AddNewEvent(BattleEndedEventFilter, provider, ({ args }) => {
-    console.log("**@ battle ended   , args are , ", args);
-    console.log("**@ battle ended   , walletAddress is , ", walletAddress);
-
     if (walletAddress.toLowerCase() === args.winner.toLowerCase()) {
       setShowAlert({
         status: true,

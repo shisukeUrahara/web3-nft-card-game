@@ -16,7 +16,6 @@ const JoinBattle = () => {
   const navigate = useNavigate();
 
   const handleJoinBattle = async (battleName) => {
-    console.log("**@ handleJoinBattle called with battleName , ", battleName);
     setBattleName(battleName);
     try {
       await contract.joinBattle(battleName, {
@@ -29,7 +28,6 @@ const JoinBattle = () => {
         message: `Joining ${battleName}`,
       });
     } catch (err) {
-      console.log("**@ join battle error caught , error is , ", err);
       setErrorMessage(err);
     }
   };

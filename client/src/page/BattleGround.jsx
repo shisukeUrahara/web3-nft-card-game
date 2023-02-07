@@ -10,8 +10,6 @@ const BattleGround = () => {
   const navigate = useNavigate();
 
   const handleBattleGroundChoice = async (ground) => {
-    console.log("**@ handleBattleGroundChoice called with ground , ", ground);
-
     setBattleGround(ground.id);
     localStorage.setItem("battleGround", ground.id);
     setShowAlert({
